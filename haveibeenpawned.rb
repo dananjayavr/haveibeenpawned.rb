@@ -3,7 +3,7 @@ require 'json'
 require 'uri'
 require 'digest'
 
-require './environment.rb'
+require './environment'
 
 $api_key = ENV['API_KEY']
 
@@ -34,7 +34,7 @@ end
 # The API takes a single parameter which is the email address to be searched for. 
 # The email is not case sensitive and will be trimmed of leading or trailing white spaces. 
 # The email should always be URL encoded. This is an authenticated API and an HIBP API key must be passed with the request.
-def all_pastes(email,api_key)
+def all_pastes(email,api_key=$api_key)
     get_resource_protected('https://haveibeenpwned.com/api/v3/pasteaccount/'.concat(email),api_key)
 end
 
@@ -43,7 +43,7 @@ end
 # The API takes a single parameter which is the account to be searched for. 
 # The account is not case sensitive and will be trimmed of leading or trailing white spaces. 
 # The account should always be URL encoded. This is an authenticated API and an HIBP API key must be passed with the request.
-def all_breaches(email,api_key)
+def all_breaches(email,api_key=$api_key)
     get_resource_protected('https://haveibeenpwned.com/api/v3/breachedaccount/'.concat(email),api_key)
 end
 
@@ -72,7 +72,7 @@ def get_resource(uri,params=nil)
     res.body if res.is_a?(Net::HTTPSuccess)
 end
 
-def get_resource_protected(uri,api_key, params=nil)
+def get_resource_protected(uri,api_key=$api_key, params=nil)
     uri = URI.parse(uri)
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true
