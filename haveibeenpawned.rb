@@ -13,12 +13,12 @@ $api_key = ENV['API_KEY']
 # It is possible to return the details of each of breach in the system.
 # Ex. ?domain=adobe.com
 def breaches(domain="")
-    return get_resource('https://haveibeenpwned.com/api/v3/breaches',{:domain => ""})
+    get_resource('https://haveibeenpwned.com/api/v3/breaches',{:domain => ""})
 end
 
 # Single breach
 def single_breach(name="Adobe")
-    return get_resource('https://haveibeenpwned.com/api/v3/breach/'.concat(name))
+    get_resource('https://haveibeenpwned.com/api/v3/breach/'.concat(name))
 end
 
 # Data classes
@@ -27,7 +27,7 @@ end
 # The values returned by this service are ordered alphabetically in a string array 
 # and will expand over time as new breaches expose previously unseen classes of data.
 def data_classes()
-    return get_resource('https://haveibeenpwned.com/api/v3/dataclasses')
+    get_resource('https://haveibeenpwned.com/api/v3/dataclasses')
 end
 
 # Getting all pastes for an account
@@ -35,7 +35,7 @@ end
 # The email is not case sensitive and will be trimmed of leading or trailing white spaces. 
 # The email should always be URL encoded. This is an authenticated API and an HIBP API key must be passed with the request.
 def all_pastes(email,api_key)
-    return get_resource_protected('https://haveibeenpwned.com/api/v3/pasteaccount/'.concat(email),api_key)
+    get_resource_protected('https://haveibeenpwned.com/api/v3/pasteaccount/'.concat(email),api_key)
 end
 
 # Getting all breaches for an account
@@ -44,7 +44,7 @@ end
 # The account is not case sensitive and will be trimmed of leading or trailing white spaces. 
 # The account should always be URL encoded. This is an authenticated API and an HIBP API key must be passed with the request.
 def all_breaches(email,api_key)
-    return get_resource_protected('https://haveibeenpwned.com/api/v3/breachedaccount/'.concat(email),api_key)
+    get_resource_protected('https://haveibeenpwned.com/api/v3/breachedaccount/'.concat(email),api_key)
 end
 
 # TODO: Add Add-Padding header for further security.
@@ -56,10 +56,10 @@ end
 # The downloadable source data delimits the full SHA-1 hash and the password count with a colon (:) and each line with a CRLF.
 # Ex. password_check(get_sha1('password')[0...5])
 def password_check(hash)
-    return get_resource('https://api.pwnedpasswords.com/range/'.concat(hash))
+    get_resource('https://api.pwnedpasswords.com/range/'.concat(hash))
 end
 
-# Helper function
+# Helper functions
 def get_resource(uri,params=nil)
     uri = URI(uri)
     params = params
@@ -69,7 +69,7 @@ def get_resource(uri,params=nil)
     else
         res = Net::HTTP.get_response(uri)
     end
-    return res.body if res.is_a?(Net::HTTPSuccess)
+    res.body if res.is_a?(Net::HTTPSuccess)
 end
 
 def get_resource_protected(uri,api_key, params=nil)
@@ -80,7 +80,7 @@ def get_resource_protected(uri,api_key, params=nil)
     request = Net::HTTP::Get.new(uri.request_uri)
     request["hibp-api-key"] = api_key
 
-    return http.request(request).body
+    http.request(request).body
 end
 
 def get_sha1(password)
